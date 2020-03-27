@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private final static String check = "check_";
     private TextView tv_content;
     private Button btn_check;
-    private String[] sdk_list = new String[]{"b", "a", "t"};
+    private String[] sdk_list = new String[]{"B", "A", "T"};
     private int cur_sdk_index;
     private LocationMangerProxy mLocationProxy;
     private CustomLocationListener mListener;
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     public void startLocation(View view) {
         mLocationProxy.startLocation(mListener);
         isStopLocation = false;
-        tv_content.append(sdk_list[cur_sdk_index]);
+        tv_content.append(sdk_list[cur_sdk_index].toUpperCase());
         tv_content.append("\r\n");
     }
 

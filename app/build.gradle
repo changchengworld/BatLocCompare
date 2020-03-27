@@ -40,6 +40,12 @@ android {
         }
     }
 
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/jniLibs']
+        }
+    }
+
 }
 
 dependencies {

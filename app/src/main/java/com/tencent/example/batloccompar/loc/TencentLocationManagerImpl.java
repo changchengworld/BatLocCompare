@@ -4,7 +4,6 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 
 import com.tencent.map.geolocation.TencentLocation;
 import com.tencent.map.geolocation.TencentLocationListener;
@@ -12,13 +11,12 @@ import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
 
 public class TencentLocationManagerImpl extends AbsLocationManager {
-    public static final String TAG = "TencentLocationMgrImpl";
     private final TencentLocationManager locationManager;
     private final TencentLocationRequest request;
     private final TencentLocationListener locationListener;
     private ILocationListener mUserLisener;
 
-    public TencentLocationManagerImpl(Context context) {
+    TencentLocationManagerImpl(Context context) {
         super(context);
         locationManager = TencentLocationManager.getInstance(mCtx);
         request = TencentLocationRequest.create()
@@ -61,8 +59,7 @@ public class TencentLocationManagerImpl extends AbsLocationManager {
     @Override
     public void startLocation(ILocationListener listener) {
         mUserLisener = listener;
-        int i = locationManager.requestLocationUpdates(request, locationListener, Looper.getMainLooper());
-        Log.i(TAG, "re = " + i);
+        locationManager.requestLocationUpdates(request, locationListener, Looper.getMainLooper());
     }
 
     @Override

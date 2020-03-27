@@ -19,6 +19,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 适配Android 8.0-->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <!--用于申请获取蓝牙信息进行室内定位-->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
     <application
         android:allowBackup="true"
@@ -36,10 +41,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name="com.tencent.map.geolocation.s"
             android:foregroundServiceType="location" />
-
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
+        <service android:name="com.amap.api.location.APSService"/>
         <meta-data
             android:name="TencentMapSDK"
             android:value="MNEBZ-PLPEW-YQ2RL-RYUPQ-M343J-BSFQZ" />
