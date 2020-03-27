@@ -14,10 +14,29 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file('debug.jks')
+            storePassword '199118'
+            keyAlias 'key0'
+            keyPassword '199118'
+        }
+        debug {
+            storeFile file('debug.jks')
+            storePassword '199118'
+            keyAlias 'key0'
+            keyPassword '199118'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 
@@ -32,5 +51,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.2.6'
-    compile 'com.amap.api:location:latest.integration'
+    implementation 'com.amap.api:location:4.9.0'
 }

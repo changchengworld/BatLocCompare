@@ -27,15 +27,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name="com.tencent.map.geolocation.s"
+            android:foregroundServiceType="location" />
+
         <meta-data
             android:name="TencentMapSDK"
-            android:value="您申请的Key" />
+            android:value="MNEBZ-PLPEW-YQ2RL-RYUPQ-M343J-BSFQZ" />
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="SnHvQ87VDZchX7YqlhBYG15Az3bvw90e" />
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="707b4d3b1abf8fd0b64816180ba441d2" />
     </application>
 </manifest>
