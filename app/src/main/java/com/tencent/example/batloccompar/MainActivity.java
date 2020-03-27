@@ -60,18 +60,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startLocation(View view) {
-        mLocationProxy.startLocation(mListener);
-        isStopLocation = false;
-        tv_content.append(sdk_list[cur_sdk_index].toUpperCase());
-        tv_content.append("\r\n");
+        if (isStopLocation) {
+            mLocationProxy.startLocation(mListener);
+            isStopLocation = false;
+            tv_content.append(sdk_list[cur_sdk_index].toUpperCase());
+            tv_content.append("\r\n");
+        }
     }
 
     public void stopLocation(View view) {
-        mLocationProxy.stopLocation();
-        isStopLocation = true;
-        tv_content.append("--------------------");
-        tv_content.append("\r\n");
-        tv_content.append("\r\n");
+        if (!isStopLocation) {
+            mLocationProxy.stopLocation();
+            isStopLocation = true;
+            tv_content.append("--------------------");
+            tv_content.append("\r\n");
+            tv_content.append("\r\n");
+        }
     }
 
     public void checkSDK(View view) {
@@ -103,25 +107,30 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onLocationChanged(Location location) {
-            int code = location.getExtras().getInt("code");
-            String reason = location.getExtras().getString("reason");
+            Bundle extras = location.getExtras();
+            if (extras != null) {
+                int code = extras.getInt("code");
+                String reason = extras.getString("reason");
+                String address = extras.getString("address");
 
-            if (mWR != null) {
-                MainActivity instance = mWR.get();
-                if (instance != null) {
-                    if (code == 0) {
-                        instance.tv_content.append("Latitude: " + location.getLatitude());
-                        instance.tv_content.append(", Longitude: " + location.getLongitude());
-                        instance.tv_content.append(", Altitude: " + location.getAltitude());
-                        instance.tv_content.append(", Accuracy: " + location.getAccuracy());
-                        instance.tv_content.append(", Bearing: " + location.getBearing());
-                        instance.tv_content.append(", Speed: " + location.getSpeed());
-                        instance.tv_content.append(", Provider: " + location.getProvider());
-                    } else {
-                        instance.tv_content.append(reason);
+                if (mWR != null) {
+                    MainActivity instance = mWR.get();
+                    if (instance != null) {
+                        if (code == 0) {
+                            instance.tv_content.append("Latitude: " + location.getLatitude());
+                            instance.tv_content.append(", Longitude: " + location.getLongitude());
+                            instance.tv_content.append(", Altitude: " + location.getAltitude());
+                            instance.tv_content.append(", Accuracy: " + location.getAccuracy());
+                            instance.tv_content.append(", Bearing: " + location.getBearing());
+                            instance.tv_content.append(", Speed: " + location.getSpeed());
+                            instance.tv_content.append(", Provider: " + location.getProvider());
+                            instance.tv_content.append(", address: " + address);
+                        } else {
+                            instance.tv_content.append(reason);
+                        }
+                        instance.tv_content.append("\r\n");
+                        instance.tv_content.append("\r\n");
                     }
-                    instance.tv_content.append("\r\n");
-                    instance.tv_content.append("\r\n");
                 }
             }
         }

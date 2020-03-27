@@ -49,6 +49,7 @@ public class TencentLocationManagerImpl extends AbsLocationManager {
                 Bundle bundle = new Bundle(tencentLocation.getExtra());
                 bundle.putInt("code", code);
                 bundle.putString("reason", reason);
+                bundle.putString("address", tencentLocation.getAddress());
                 location.setExtras(bundle);
                 location.setProvider(tencentLocation.getProvider());
                 return location;

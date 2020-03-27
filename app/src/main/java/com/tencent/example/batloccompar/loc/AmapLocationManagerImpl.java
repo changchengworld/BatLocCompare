@@ -29,7 +29,26 @@ public class AmapLocationManagerImpl extends AbsLocationManager {
             }
 
             private Location transferLocation(AMapLocation aMapLocation) {
-                Location location = new Location(aMapLocation.getProvider());
+                int locationType = aMapLocation.getLocationType();
+                String provider = "";
+                switch (locationType) {
+                    case 1:
+                        provider = "gps";
+                        break;
+                    case 2:
+                    case 4:
+                    case 5:
+                    case 6:
+                        provider = "network";
+                        break;
+                    case 8:
+                        provider = "offline";
+                        break;
+                    case 9:
+                        provider = "last";
+                        break;
+                }
+                Location location = new Location(provider);
                 location.setAccuracy(aMapLocation.getAccuracy());
                 location.setAltitude(aMapLocation.getAltitude());
                 location.setLatitude(aMapLocation.getLatitude());
@@ -39,8 +58,9 @@ public class AmapLocationManagerImpl extends AbsLocationManager {
                 Bundle bundle = new Bundle();
                 bundle.putInt("code", aMapLocation.getErrorCode());
                 bundle.putString("reason", aMapLocation.getErrorInfo());
+                bundle.putString("address", aMapLocation.getAddress());
                 location.setExtras(bundle);
-                location.setProvider(aMapLocation.getProvider());
+                location.setProvider(provider);
                 return location;
             }
         });

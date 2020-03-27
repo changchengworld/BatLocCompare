@@ -20,6 +20,8 @@ public class BaiduLocationManagerImpl extends AbsLocationManager {
         LocationClientOption option = new LocationClientOption();
         option.setScanSpan(2000);
         option.setOpenGps(true);
+        option.setIsNeedAddress(true);
+        option.setIsNeedAltitude(true);
         mLocationClient.setLocOption(option);
 
         BDAbstractLocationListener listener = new BDAbstractLocationListener() {
@@ -32,7 +34,14 @@ public class BaiduLocationManagerImpl extends AbsLocationManager {
             }
 
             private Location transferLocation(BDLocation bdLocation) {
-                Location location = new Location(bdLocation.getLocTypeDescription());
+                String provider = "gps";
+                int locType = bdLocation.getLocType();
+                if (locType == 61) {
+                    provider = "gps";
+                } else if (locType == 161) {
+                    provider = "network";
+                }
+                Location location = new Location(provider);
                 location.setAccuracy(bdLocation.getRadius());
                 location.setAltitude(bdLocation.getAltitude());
                 location.setLatitude(bdLocation.getLatitude());
@@ -40,17 +49,14 @@ public class BaiduLocationManagerImpl extends AbsLocationManager {
                 location.setBearing(bdLocation.getDirection());
                 location.setSpeed(bdLocation.getSpeed());
                 Bundle bundle = new Bundle();
-                int locType = bdLocation.getLocType();
+
                 if (locType == 61 || locType == 161) {
                     bundle.putInt("code", 0);
                 }
                 bundle.putString("reason", bdLocation.getLocTypeDescription());
+                bundle.putString("address", bdLocation.getAddrStr());
                 location.setExtras(bundle);
-                if (locType == 61) {
-                    location.setProvider("gps");
-                } else if (locType == 161) {
-                    location.setProvider("network");
-                }
+                location.setProvider(provider);
                 return location;
             }
         };
