@@ -1,6 +1,8 @@
 package com.tencent.example.batloccompar;
 
+import android.Manifest;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import com.tencent.example.batloccompar.loc.LocationMangerProxy;
 import java.lang.ref.WeakReference;
 
 import androidx.appcompat.app.AppCompatActivity;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity {
     private final static String check = "check_";
@@ -34,6 +37,26 @@ public class MainActivity extends AppCompatActivity {
         btn_check.setText(btnCheckContent);
         mLocationProxy = new LocationMangerProxy(this);
         mListener = new CustomLocationListener(new WeakReference<>(this));
+        requiresPermission();
+    }
+
+    private void requiresPermission() {
+        String[] perms;
+        if (Build.VERSION.SDK_INT >= 29) {
+            perms = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    , Manifest.permission.ACCESS_FINE_LOCATION
+                    , Manifest.permission.ACCESS_BACKGROUND_LOCATION};
+        } else {
+            perms = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    , Manifest.permission.ACCESS_FINE_LOCATION};
+        }
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            Toast.makeText(this, "Permission ok", Toast.LENGTH_SHORT).show();
+        } else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, getString(R.string.request_permission),
+                    1, perms);
+        }
     }
 
     public void startLocation(View view) {
@@ -63,6 +86,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
     private static class CustomLocationListener implements ILocationListener {
         private WeakReference<MainActivity> mWR;
 
@@ -72,16 +103,23 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onLocationChanged(Location location) {
+            int code = location.getExtras().getInt("code");
+            String reason = location.getExtras().getString("reason");
+
             if (mWR != null) {
                 MainActivity instance = mWR.get();
                 if (instance != null) {
-                    instance.tv_content.append("Latitude: " + location.getLatitude());
-                    instance.tv_content.append(", Longitude: " + location.getLongitude());
-                    instance.tv_content.append(", Altitude: " + location.getAltitude());
-                    instance.tv_content.append(", Accuracy: " + location.getAccuracy());
-                    instance.tv_content.append(", Bearing: " + location.getBearing());
-                    instance.tv_content.append(", Speed: " + location.getSpeed());
-                    instance.tv_content.append(", Provider: " + location.getProvider());
+                    if (code == 0) {
+                        instance.tv_content.append("Latitude: " + location.getLatitude());
+                        instance.tv_content.append(", Longitude: " + location.getLongitude());
+                        instance.tv_content.append(", Altitude: " + location.getAltitude());
+                        instance.tv_content.append(", Accuracy: " + location.getAccuracy());
+                        instance.tv_content.append(", Bearing: " + location.getBearing());
+                        instance.tv_content.append(", Speed: " + location.getSpeed());
+                        instance.tv_content.append(", Provider: " + location.getProvider());
+                    } else {
+                        instance.tv_content.append(reason);
+                    }
                     instance.tv_content.append("\r\n");
                     instance.tv_content.append("\r\n");
                 }

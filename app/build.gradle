@@ -52,4 +52,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.2.6'
     implementation 'com.amap.api:location:4.9.0'
+    implementation 'pub.devrel:easypermissions:3.0.0'
 }

@@ -2,6 +2,7 @@ package com.tencent.example.batloccompar.loc;
 
 import android.content.Context;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 
@@ -28,9 +29,9 @@ public class TencentLocationManagerImpl extends AbsLocationManager {
         locationListener = new TencentLocationListener() {
 
             @Override
-            public void onLocationChanged(TencentLocation tencentLocation, int i, String s) {
+            public void onLocationChanged(TencentLocation tencentLocation, int code, String reason) {
                 if (mUserLisener != null) {
-                    mUserLisener.onLocationChanged(transferLocation(tencentLocation));
+                    mUserLisener.onLocationChanged(transferLocation(tencentLocation, code, reason));
                 }
             }
 
@@ -39,7 +40,7 @@ public class TencentLocationManagerImpl extends AbsLocationManager {
 
             }
 
-            private Location transferLocation(TencentLocation tencentLocation) {
+            private Location transferLocation(TencentLocation tencentLocation, int code, String reason) {
                 Location location = new Location(tencentLocation.getProvider());
                 location.setAccuracy(tencentLocation.getAccuracy());
                 location.setAltitude(tencentLocation.getAltitude());
@@ -47,7 +48,10 @@ public class TencentLocationManagerImpl extends AbsLocationManager {
                 location.setLongitude(tencentLocation.getLongitude());
                 location.setBearing(tencentLocation.getBearing());
                 location.setSpeed(tencentLocation.getSpeed());
-                location.setExtras(tencentLocation.getExtra());
+                Bundle bundle = new Bundle(tencentLocation.getExtra());
+                bundle.putInt("code", code);
+                bundle.putString("reason", reason);
+                location.setExtras(bundle);
                 location.setProvider(tencentLocation.getProvider());
                 return location;
             }

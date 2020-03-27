@@ -3,4 +3,5 @@
     <string name="start">start</string>
     <string name="stop">stop</string>
     <string name="check">check_</string>
+    <string name="request_permission">request permission</string>
 </resources>
