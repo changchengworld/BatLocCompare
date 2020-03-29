@@ -69,11 +69,17 @@ public class AmapLocationManagerImpl extends AbsLocationManager {
     @Override
     public void startLocation(ILocationListener listener) {
         mUserLisener = listener;
-        mLocationClient.startLocation();
+        if (mLocationClient != null) {
+            mLocationClient.enableBackgroundLocation(LOC_NOTIFICATIONID, buildNotification());
+            mLocationClient.startLocation();
+        }
     }
 
     @Override
     public void stopLocation() {
-        mLocationClient.stopLocation();
+        if (mLocationClient != null) {
+            mLocationClient.stopLocation();
+            mLocationClient.disableBackgroundLocation(true);
+        }
     }
 }

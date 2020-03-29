@@ -60,11 +60,17 @@ public class TencentLocationManagerImpl extends AbsLocationManager {
     @Override
     public void startLocation(ILocationListener listener) {
         mUserLisener = listener;
-        locationManager.requestLocationUpdates(request, locationListener, Looper.getMainLooper());
+        if (locationManager != null) {
+            locationManager.enableForegroundLocation(LOC_NOTIFICATIONID, buildNotification());
+            locationManager.requestLocationUpdates(request, locationListener, Looper.getMainLooper());
+        }
     }
 
     @Override
     public void stopLocation() {
-        locationManager.removeUpdates(locationListener);
+        if (locationManager != null) {
+            locationManager.removeUpdates(locationListener);
+            locationManager.disableForegroundLocation(true);
+        }
     }
 }

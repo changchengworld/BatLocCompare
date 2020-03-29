@@ -67,6 +67,7 @@ public class BaiduLocationManagerImpl extends AbsLocationManager {
     public void startLocation(ILocationListener listener) {
         mUserLisener = listener;
         if (!mLocationClient.isStarted()) {
+            mLocationClient.enableLocInForeground(LOC_NOTIFICATIONID, buildNotification());
             mLocationClient.start();
         }
     }
@@ -75,6 +76,7 @@ public class BaiduLocationManagerImpl extends AbsLocationManager {
     public void stopLocation() {
         if (mLocationClient.isStarted()) {
             mLocationClient.stop();
+            mLocationClient.disableLocInForeground(true);
         }
     }
 }
